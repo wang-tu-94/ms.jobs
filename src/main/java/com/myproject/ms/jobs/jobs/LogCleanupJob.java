@@ -6,7 +6,9 @@ import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 
 @Component("LogCleanupJob")
 @JobDescription("Nettoyage automatique des vieux logs") // <-- Ajoute ceci
@@ -19,7 +21,7 @@ public class LogCleanupJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
-        LocalDateTime limitDate = LocalDateTime.now().minusDays(30);
+        Instant limitDate = Instant.now().minus(30, ChronoUnit.DAYS);
         repository.deleteByTimestampBefore(limitDate);
         System.out.println("Nettoyage des logs terminé pour les données avant le " + limitDate);
     }

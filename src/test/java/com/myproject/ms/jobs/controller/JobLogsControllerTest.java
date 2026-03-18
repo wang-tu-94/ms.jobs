@@ -14,7 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +39,7 @@ class JobLogsControllerTest {
     @Test
     @DisplayName("GET /v1/logs/{name} - Doit retourner une page de logs")
     void getLogs_ShouldReturnPagedLogs() throws Exception {
-        JobLogDto dto = new JobLogDto(1L, "JobA", LocalDateTime.now(), "STEP1", "SUCCESS", "OK");
+        JobLogDto dto = new JobLogDto(1L, "JobA", Instant.now(), "STEP1", "SUCCESS", "OK");
         when(jobLogsService.getLogs(anyString(), anyInt(), anyInt()))
                 .thenReturn(new PageImpl<>(List.of(dto)));
 
@@ -54,7 +54,7 @@ class JobLogsControllerTest {
     @Test
     @DisplayName("GET /v1/logs/{name}/{id} - Succès avec ID valide")
     void getById_ValidId_ShouldReturnLog() throws Exception {
-        JobLogDto dto = new JobLogDto(123L, "JobA", LocalDateTime.now(), "STEP1", "INFO", "Message");
+        JobLogDto dto = new JobLogDto(123L, "JobA", Instant.now(), "STEP1", "INFO", "Message");
         when(jobLogsService.getLogById(123L)).thenReturn(dto);
 
         mockMvc.perform(get("/v1/logs/JobA/123"))

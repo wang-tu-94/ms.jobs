@@ -14,7 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ class JobControllerTest {
     @DisplayName("GET /v1/jobs/jobs - Doit retourner tous les jobs groupés")
     void listAllGrouped_ShouldReturnMap() throws Exception {
         // Arrange
-        JobResponse response = new JobResponse("Job1", "G1", "Desc", "0 * * * * ?", "NORMAL", LocalDateTime.now());
+        JobResponse response = new JobResponse("Job1", "G1", "Desc", "0 * * * * ?", "NORMAL", Instant.now());
         when(jobService.getAllJobsGrouped()).thenReturn(Map.of("G1", List.of(response)));
 
         // Act & Assert
@@ -52,7 +52,7 @@ class JobControllerTest {
     @DisplayName("GET /v1/jobs/groups/{group} - Doit retourner la liste d'un groupe")
     void listByGroup_ShouldReturnList() throws Exception {
         // Arrange
-        JobResponse response = new JobResponse("Job1", "G1", "Desc", "0 * * * * ?", "NORMAL", LocalDateTime.now());
+        JobResponse response = new JobResponse("Job1", "G1", "Desc", "0 * * * * ?", "NORMAL", Instant.now());
         when(jobService.getJobsByGroup("G1")).thenReturn(List.of(response));
 
         // Act & Assert
@@ -66,7 +66,7 @@ class JobControllerTest {
     @DisplayName("GET /v1/jobs/groups/{group}/jobs/{name} - Doit retourner un job précis")
     void getOne_ShouldReturnJob() throws Exception {
         // Arrange
-        JobResponse response = new JobResponse("Job1", "G1", "Desc", "0 * * * * ?", "NORMAL", LocalDateTime.now());
+        JobResponse response = new JobResponse("Job1", "G1", "Desc", "0 * * * * ?", "NORMAL", Instant.now());
         when(jobService.getJobDetails("Job1", "G1")).thenReturn(response);
 
         // Act & Assert

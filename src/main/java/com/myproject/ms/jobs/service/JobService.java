@@ -10,7 +10,7 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,9 +73,9 @@ public class JobService {
                     .map(t -> ((CronTrigger) t).getCronExpression())
                     .orElse("N/A");
 
-            LocalDateTime nextFire = trigger
+            Instant nextFire = trigger
                     .map(Trigger::getNextFireTime)
-                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                    .map(date -> date.toInstant().atZone(ZoneId.systemDefault()).toInstant())
                     .orElse(null);
 
             String status = trigger

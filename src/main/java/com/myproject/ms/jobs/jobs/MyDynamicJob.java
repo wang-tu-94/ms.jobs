@@ -2,13 +2,13 @@ package com.myproject.ms.jobs.jobs;
 
 import com.myproject.ms.jobs.config.JobDescription;
 import com.myproject.ms.jobs.entity.JobLog;
-import com.myproject.ms.jobs.repository.JobLogRepository;
 import com.myproject.ms.jobs.service.JobLogsService;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
 
 @Component("ExampleJob")
 @JobDescription("Exemple de job dynamique avec logs") // <-- Ajoute ceci
@@ -42,7 +42,7 @@ public class MyDynamicJob extends QuartzJobBean {
         log.setJobName(name);
         log.setStepName(step);
         log.setMessage(msg);
-        log.setTimestamp(LocalDateTime.now());
+        log.setTimestamp(Instant.now());
         JobLogsService.save(log);
     }
 }

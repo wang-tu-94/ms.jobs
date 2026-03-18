@@ -1,8 +1,9 @@
 package com.myproject.ms.jobs.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Schema(description = "État actuel et configuration d'un job dans le scheduler")
 public record JobResponse(
@@ -23,6 +24,6 @@ public record JobResponse(
                 allowableValues = {"NORMAL", "PAUSED", "COMPLETE", "ERROR", "BLOCKED", "NONE"})
         String status,
 
-        @Schema(description = "Date et heure de la prochaine exécution prévue", example = "2026-03-18T14:35:00")
-        LocalDateTime nextFireTime
+        @Schema(description = "Date et heure de la prochaine exécution prévue", example = "1773844313139")
+        Instant nextFireTime
 ) {}

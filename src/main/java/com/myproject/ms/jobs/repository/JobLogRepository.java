@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Repository
@@ -18,5 +19,5 @@ public interface JobLogRepository extends JpaRepository<JobLog, Long> {
 
     @Modifying
     @Transactional
-    void deleteByTimestampBefore(LocalDateTime limitDate);
+    void deleteByTimestampBefore(Instant limitDate);
 }

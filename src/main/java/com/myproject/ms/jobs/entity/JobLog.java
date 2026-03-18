@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class JobLog {
 
     private String jobName;
 
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
     private String stepName;
 
