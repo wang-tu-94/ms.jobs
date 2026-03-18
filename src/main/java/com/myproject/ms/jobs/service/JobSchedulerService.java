@@ -1,5 +1,6 @@
 package com.myproject.ms.jobs.service;
 
+import com.myproject.ms.jobs.dto.CronUpdateRequest;
 import com.myproject.ms.jobs.exception.NotFoundException;
 import org.quartz.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -43,12 +44,12 @@ public class JobSchedulerService {
         scheduler.resumeJob(JobKey.jobKey(name, group));
     }
 
-    public void updateJobCron(String name, String group, String newCron) throws SchedulerException {
+    public void updateJobCron(String name, String group, CronUpdateRequest cronUpdateRequest) throws SchedulerException {
         TriggerKey triggerKey = TriggerKey.triggerKey(name + "-trigger", group);
 
         CronTrigger newTrigger = TriggerBuilder.newTrigger()
                 .withIdentity(triggerKey)
-                .withSchedule(CronScheduleBuilder.cronSchedule(newCron))
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronUpdateRequest.cron()))
                 .build();
 
         Date nextFireTime = scheduler.rescheduleJob(triggerKey, newTrigger);

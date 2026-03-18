@@ -1,6 +1,7 @@
 package com.myproject.ms.jobs.controller;
 
 import com.myproject.ms.jobs.config.SecurityConfig;
+import com.myproject.ms.jobs.dto.CronUpdateRequest;
 import com.myproject.ms.jobs.dto.JobRequest;
 import com.myproject.ms.jobs.service.JobSchedulerService;
 import org.junit.jupiter.api.DisplayName;
@@ -74,16 +75,14 @@ class JobSchedulerControllerTest {
     @DisplayName("PATCH /cron - Doit mettre à jour le CRON en nettoyant les quotes")
     void updateCron_ShouldReturnOk() throws Exception {
         // Arrange
-        String newCronRaw = "\"0 0/5 * * * ?\""; // Simulation d'une String JSON avec quotes
-        String expectedCron = "0 0/5 * * * ?";
+        CronUpdateRequest updateRequest = new CronUpdateRequest("0 0/5 * * * ?");
 
         // Act & Assert
         mockMvc.perform(patch("/v1/jobs/scheduler/DEFAULT/MyJob/cron")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(newCronRaw))
+                        .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isNoContent());
 
-        // Vérifie que le replace("\"" , "") a bien fonctionné avant l'appel au service
-        verify(jobSchedulerService).updateJobCron("MyJob", "DEFAULT", expectedCron);
+        verify(jobSchedulerService).updateJobCron("MyJob", "DEFAULT", updateRequest);
     }
 }

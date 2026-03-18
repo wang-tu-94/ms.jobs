@@ -1,5 +1,6 @@
 package com.myproject.ms.jobs.service;
 
+import com.myproject.ms.jobs.dto.CronUpdateRequest;
 import com.myproject.ms.jobs.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -109,7 +110,7 @@ class JobSchedulerServiceTest {
         // Arrange
         String name = "myJob";
         String group = "myGroup";
-        String newCron = "0 0 12 * * ?";
+        CronUpdateRequest newCron = new CronUpdateRequest("0 0 12 * * ?");
         TriggerKey triggerKey = TriggerKey.triggerKey(name + "-trigger", group);
 
         when(scheduler.rescheduleJob(eq(triggerKey), any(Trigger.class))).thenReturn(new Date());
@@ -128,7 +129,7 @@ class JobSchedulerServiceTest {
         when(scheduler.rescheduleJob(any(TriggerKey.class), any(Trigger.class))).thenReturn(null);
 
         // Act & Assert
-        assertThatThrownBy(() -> jobSchedulerService.updateJobCron("ghost", "group", "0 * * * * ?"))
+        assertThatThrownBy(() -> jobSchedulerService.updateJobCron("ghost", "group", new CronUpdateRequest("0 0 12 * * ?") ))
                 .isInstanceOf(NotFoundException.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.myproject.ms.jobs.controller;
 
+import com.myproject.ms.jobs.dto.CronUpdateRequest;
 import com.myproject.ms.jobs.dto.JobRequest;
 import com.myproject.ms.jobs.service.JobSchedulerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,9 +81,9 @@ public class JobSchedulerController {
             @PathVariable String group,
             @PathVariable String name,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nouvelle expression CRON", content = @Content(schema = @Schema(implementation = String.class, example = "0 0/15 * * * ?")))
-            @RequestBody String newCron) throws SchedulerException {
+            @RequestBody CronUpdateRequest cronUpdateRequest) throws SchedulerException {
 
-        jobSchedulerService.updateJobCron(name, group, newCron.replace("\"", ""));
+        jobSchedulerService.updateJobCron(name, group, cronUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 }
