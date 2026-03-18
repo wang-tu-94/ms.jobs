@@ -54,7 +54,7 @@ management:
         include: health, info, metrics, prometheus
   endpoint:
     health:
-      show-details: when_authenticated # Détails (DB, Quartz) uniquement si logué
+      show-details: when-authorized # Détails (DB, Quartz) uniquement si logué
   health:
     quartz:
       enabled: true # Active l'indicateur spécifique à Quartz
