@@ -29,4 +29,13 @@ spring:
             scheduler:
               instanceName: MyQuartzScheduler
               instanceId: AUTO
+springdoc:
+  api-doc:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
 
+jwt:
+  secret: ${JWT_SECRET:8w9eK7sVh3FQ2mJ6lP0rXyZtN1bQ4uDkFvHsT2cW+Eo=}

@@ -1,11 +1,14 @@
 package com.myproject.ms.jobs.controller;
 
+import com.myproject.ms.jobs.config.SecurityConfig;
 import com.myproject.ms.jobs.dto.JobResponse;
 import com.myproject.ms.jobs.service.JobService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,6 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(JobController.class)
+@Import(SecurityConfig.class)
+@WithMockUser
 class JobControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -56,6 +61,7 @@ class JobControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /v1/jobs/groups/{group}/jobs/{name} - Doit retourner un job précis")
     void getOne_ShouldReturnJob() throws Exception {
         // Arrange
@@ -70,6 +76,7 @@ class JobControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("DELETE - Doit retourner 200 quand le job est supprimé")
     void deleteJob_Success_ShouldReturnOk() throws Exception {
         // Arrange
@@ -82,6 +89,7 @@ class JobControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("DELETE - Doit retourner 404 quand le job n'existe pas")
     void deleteJob_NotFound_ShouldReturn404() throws Exception {
         // Arrange
