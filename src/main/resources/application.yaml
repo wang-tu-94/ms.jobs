@@ -13,9 +13,14 @@ spring:
     url: jdbc:postgresql://${DB_HOST:db}:${DB_PORT:5432}/${DB_NAME:ms_jobs}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-  sql:
-    init:
-      mode: never
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
     jpa:
       hibernate:
         ddl-auto: update
@@ -23,12 +28,16 @@ spring:
     job-store-type: jdbc
     jdbc:
       initialize-schema: always
-      properties:
-        org:
-          quartz:
-            scheduler:
-              instanceName: MyQuartzScheduler
-              instanceId: AUTO
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyQuartzScheduler
+            instanceId: AUTO
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            useProperties: true
+            tablePrefix: QRTZ_
 springdoc:
   api-doc:
     enabled: true
@@ -36,6 +45,19 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # On expose health pour le monitoring et info/metrics pour le debug
+        include: health, info, metrics, prometheus
+  endpoint:
+    health:
+      show-details: when_authenticated # Détails (DB, Quartz) uniquement si logué
+  health:
+    quartz:
+      enabled: true # Active l'indicateur spécifique à Quartz
 
 jwt:
   secret: ${JWT_SECRET:8w9eK7sVh3FQ2mJ6lP0rXyZtN1bQ4uDkFvHsT2cW+Eo=}

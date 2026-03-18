@@ -1,9 +1,6 @@
 package com.myproject.ms.jobs.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "job_logs")
 public class JobLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
