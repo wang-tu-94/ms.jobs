@@ -41,7 +41,7 @@ public class JobController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(description = "Clé : Nom du groupe, Valeur : Liste des jobs", example = "{ 'DEFAULT': [ {...} ] }")))
     })
-    @GetMapping("/jobs")
+    @GetMapping
     public ResponseEntity<Map<String, List<JobResponse>>> listAllGrouped() throws SchedulerException {
         return ResponseEntity.ok(jobService.getAllJobsGrouped());
     }
