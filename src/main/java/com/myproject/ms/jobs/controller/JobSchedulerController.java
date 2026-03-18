@@ -76,13 +76,13 @@ public class JobSchedulerController {
             @ApiResponse(responseCode = "404", description = "Job ou Trigger non trouvé")
     })
     @PatchMapping("/{group}/{name}/cron")
-    public ResponseEntity<String> updateCron(
+    public ResponseEntity<Void> updateCron(
             @PathVariable String group,
             @PathVariable String name,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Nouvelle expression CRON", content = @Content(schema = @Schema(implementation = String.class, example = "0 0/15 * * * ?")))
             @RequestBody String newCron) throws SchedulerException {
 
         jobSchedulerService.updateJobCron(name, group, newCron.replace("\"", ""));
-        return ResponseEntity.ok("CRON mis à jour. Prochaine exécution prise en compte.");
+        return ResponseEntity.noContent().build();
     }
 }

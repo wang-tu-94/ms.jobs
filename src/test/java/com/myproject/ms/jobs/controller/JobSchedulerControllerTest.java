@@ -81,8 +81,7 @@ class JobSchedulerControllerTest {
         mockMvc.perform(patch("/v1/jobs/scheduler/DEFAULT/MyJob/cron")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newCronRaw))
-                .andExpect(status().isOk())
-                .andExpect(content().string("CRON mis à jour. Prochaine exécution prise en compte."));
+                .andExpect(status().isNoContent());
 
         // Vérifie que le replace("\"" , "") a bien fonctionné avant l'appel au service
         verify(jobSchedulerService).updateJobCron("MyJob", "DEFAULT", expectedCron);
