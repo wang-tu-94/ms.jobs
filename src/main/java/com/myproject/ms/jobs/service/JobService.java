@@ -26,12 +26,12 @@ public class JobService {
         this.context = context;
     }
 
-    public boolean deleteScheduledJob(String name, String group) throws SchedulerException {
+    public void deleteScheduledJob(String name, String group) throws SchedulerException {
         JobKey jobKey = JobKey.jobKey(name, group);
-        if (scheduler.checkExists(jobKey)) {
-            return scheduler.deleteJob(jobKey);
+        if (!scheduler.checkExists(jobKey)) {
+            throw new NotFoundException("Job not found.");
         }
-        return false;
+        scheduler.deleteJob(jobKey);
     }
 
     public Map<String, List<JobResponse>> getAllJobsGrouped() throws SchedulerException {

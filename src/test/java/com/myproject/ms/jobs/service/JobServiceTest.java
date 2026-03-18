@@ -41,25 +41,20 @@ class JobServiceTest {
         when(scheduler.deleteJob(jobKey)).thenReturn(true);
 
         // Act
-        boolean result = jobService.deleteScheduledJob("testName", "testGroup");
+         jobService.deleteScheduledJob("testName", "testGroup");
 
         // Assert
-        assertThat(result).isTrue();
         verify(scheduler).deleteJob(jobKey);
     }
 
     @Test
-    @DisplayName("should return false if job to delete does not exist")
+    @DisplayName("should throw NotFoundException if job to delete does not exist")
     void deleteScheduledJob_NotExists() throws SchedulerException {
         // Arrange
         when(scheduler.checkExists(any(JobKey.class))).thenReturn(false);
 
-        // Act
-        boolean result = jobService.deleteScheduledJob("name", "group");
-
-        // Assert
-        assertThat(result).isFalse();
-        verify(scheduler, never()).deleteJob(any());
+        // ACT & Assert
+        assertThrows(NotFoundException.class, () -> jobService.deleteScheduledJob("name", "group"));
     }
 
     @Test

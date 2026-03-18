@@ -75,13 +75,11 @@ public class JobController {
             @ApiResponse(responseCode = "404", description = "Le job n'a pas pu être trouvé pour suppression")
     })
     @DeleteMapping("/groups/{group}/jobs/{name}")
-    public ResponseEntity<String> deleteJob(
+    public ResponseEntity<Void> deleteJob(
             @PathVariable String group,
             @PathVariable String name) throws SchedulerException {
-        boolean deleted = jobService.deleteScheduledJob(name, group);
-        return deleted ?
-                ResponseEntity.ok("Job supprimé définitivement.") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job non trouvé.");
+        jobService.deleteScheduledJob(name, group);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
