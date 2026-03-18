@@ -34,9 +34,9 @@ public class JobSchedulerController {
             @ApiResponse(responseCode = "500", description = "Erreur interne du moteur Quartz")
     })
     @PostMapping("/schedule")
-    public ResponseEntity<String> schedule(@Valid @RequestBody JobRequest req) throws SchedulerException {
+    public ResponseEntity<Void> schedule(@Valid @RequestBody JobRequest req) throws SchedulerException {
         jobSchedulerService.schedule(req.name(), req.group(), req.cron(), req.jobType());
-        return ResponseEntity.ok("Job planifié.");
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Mettre un job en pause", description = "Suspend l'exécution d'un job sans le supprimer. Les déclenchements prévus ne seront pas honorés tant que le job est en pause.")

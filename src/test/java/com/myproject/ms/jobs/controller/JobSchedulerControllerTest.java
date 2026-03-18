@@ -45,8 +45,7 @@ class JobSchedulerControllerTest {
         mockMvc.perform(post("/v1/jobs/scheduler/schedule")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Job planifié."));
+                .andExpect(status().isNoContent());
 
         verify(jobSchedulerService).schedule("MyJob", "DEFAULT", "0 * * * * ?", "MyTask");
     }
