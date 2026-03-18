@@ -1,24 +1,29 @@
 package com.myproject.ms.jobs.service;
 
+import com.myproject.ms.jobs.config.JobDescription;
 import com.myproject.ms.jobs.dto.JobResponse;
+import com.myproject.ms.jobs.dto.JobTypeDto;
 import com.myproject.ms.jobs.exception.ApiException;
 import com.myproject.ms.jobs.exception.NotFoundException;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class JobService {
     private final Scheduler scheduler;
 
-    public JobService(Scheduler scheduler) {
+    private final ApplicationContext context;
+
+    public JobService(Scheduler scheduler, ApplicationContext context) {
         this.scheduler = scheduler;
+        this.context = context;
     }
 
     public boolean deleteScheduledJob(String name, String group) throws SchedulerException {
@@ -90,6 +95,37 @@ public class JobService {
             );
         } catch (SchedulerException e) {
             throw new RuntimeException("Erreur de mapping pour le job " + jobKey.getName(), e);
+        }
+    }
+
+    public List<JobTypeDto> getAvailableJobTypes() {
+        // Récupère les noms de tous les beans de type org.quartz.Job
+        String[] beanNames = context.getBeanNamesForType(Job.class);
+
+        return Arrays.stream(beanNames)
+                .map(this::mapToJobTypeDto)
+                .sorted(Comparator.comparing(JobTypeDto::id)) // Tri par description pour l'UX
+                .toList();
+    }
+
+    /**
+     * Méthode d'aide pour extraire la description d'un Bean
+     */
+    private JobTypeDto mapToJobTypeDto(String beanName) {
+        try {
+            // On récupère la classe réelle du Bean
+            Class<?> beanClass = context.getType(beanName);
+
+            // On cherche l'annotation @JobDescription
+            String description = Optional.ofNullable(beanClass)
+                    .filter(clazz -> clazz.isAnnotationPresent(JobDescription.class))
+                    .map(clazz -> clazz.getAnnotation(JobDescription.class).value())
+                    .orElse("Aucune description pour ce job (" + beanName + ")");
+
+            return new JobTypeDto(beanName, description);
+        } catch (Exception e) {
+            // En cas d'erreur de parsing, on renvoie au moins l'ID
+            return new JobTypeDto(beanName, "Erreur lors de la récupération de la description");
         }
     }
 }

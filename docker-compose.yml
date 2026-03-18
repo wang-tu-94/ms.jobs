@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ms-jobs-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-ms_jobs}
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-admin} -d ${DB_NAME:-ms_jobs}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ms-jobs:
+    image: magnomos/ms.jobs:latest
+    container_name: ms-jobs-app
+    depends_on:
+      db:
+        condition: service_healthy # Attend que la DB soit prête AVANT de démarrer Quartz
+    ports:
+      - "8087:8087"
+    environment:
+      # On fait correspondre les variables du Docker Compose avec ton application.yml
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-ms_jobs}
+      - DB_USER=${DB_USER:-admin}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      # Ajoute ici tes secrets JWT si nécessaire
+      - JWT_SECRET=${JWT_SECRET:-8w9eK7sVh3FQ2mJ6lP0rXyZtN1bQ4uDkFvHsT2cW+Eo=}
+    restart: always
+
+volumes:
+  postgres_data:

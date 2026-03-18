@@ -1,9 +1,11 @@
 package com.myproject.ms.jobs.controller;
 
 import com.myproject.ms.jobs.dto.JobResponse;
+import com.myproject.ms.jobs.dto.JobTypeDto;
 import com.myproject.ms.jobs.service.JobService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -80,5 +82,20 @@ public class JobController {
         return deleted ?
                 ResponseEntity.ok("Job supprimé définitivement.") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job non trouvé.");
+    }
+
+    @Operation(
+            summary = "Lister les types de jobs disponibles (pour le front)",
+            description = "Retourne la liste des types de jobs (id et description lisible). " +
+                    "L'identifiant ('id') doit être utilisé comme 'jobType' lors de la planification."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Liste des types de jobs récupérée",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = JobTypeDto.class))))
+    })
+    @GetMapping("/types")
+    public ResponseEntity<List<JobTypeDto>> getAvailableTypes() {
+        return ResponseEntity.ok(jobService.getAvailableJobTypes());
     }
 }

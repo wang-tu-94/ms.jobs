@@ -1,5 +1,6 @@
 package com.myproject.ms.jobs.jobs;
 
+import com.myproject.ms.jobs.config.JobDescription;
 import com.myproject.ms.jobs.entity.JobLog;
 import com.myproject.ms.jobs.repository.JobLogRepository;
 import com.myproject.ms.jobs.service.JobLogsService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component("ExampleJob")
+@JobDescription("Exemple de job dynamique avec logs") // <-- Ajoute ceci
 public class MyDynamicJob extends QuartzJobBean {
 
     private final JobLogsService JobLogsService;

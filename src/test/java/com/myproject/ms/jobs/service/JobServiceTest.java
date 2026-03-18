@@ -1,7 +1,9 @@
 package com.myproject.ms.jobs.service;
 
 import com.myproject.ms.jobs.dto.JobResponse;
+import com.myproject.ms.jobs.dto.JobTypeDto;
 import com.myproject.ms.jobs.exception.NotFoundException;
+import com.myproject.ms.jobs.jobs.MyDynamicJob;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.springframework.context.ApplicationContext;
 
 import java.util.*;
 
@@ -22,6 +25,9 @@ import static org.mockito.Mockito.*;
 class JobServiceTest {
     @Mock
     private Scheduler scheduler;
+
+    @Mock
+    private ApplicationContext context;
 
     @InjectMocks
     private JobService jobService;
@@ -123,5 +129,29 @@ class JobServiceTest {
         assertThat(result).containsKey(group);
         assertThat(result.get(group)).hasSize(1);
         assertThat(result.get(group).getFirst().status()).isEqualTo("NO_TRIGGER");
+    }
+
+    @Test
+    @DisplayName("Devrait retourner les types de jobs triés par leur ID (nom du bean)")
+    void getAvailableJobTypes_ShouldReturnSortedById() {
+        // Arrange
+        // On simule des noms de beans dans le désordre
+        String[] beanNames = {"ZebraJob", "AlphaJob", "CleanupJob"};
+        when(context.getBeanNamesForType(Job.class)).thenReturn(beanNames);
+
+        // On mocke le type pour chaque bean (nécessaire pour l'annotation)
+        when(context.getType("ZebraJob")).thenReturn((Class) MyDynamicJob.class);
+        when(context.getType("AlphaJob")).thenReturn((Class) MyDynamicJob.class);
+        when(context.getType("CleanupJob")).thenReturn((Class) MyDynamicJob.class);
+
+        // Act
+        List<JobTypeDto> result = jobService.getAvailableJobTypes();
+
+        // Assert
+        assertThat(result).hasSize(3);
+        // Vérification de l'ordre alphabétique des IDs
+        assertThat(result.get(0).id()).isEqualTo("AlphaJob");
+        assertThat(result.get(1).id()).isEqualTo("CleanupJob");
+        assertThat(result.get(2).id()).isEqualTo("ZebraJob");
     }
 }
