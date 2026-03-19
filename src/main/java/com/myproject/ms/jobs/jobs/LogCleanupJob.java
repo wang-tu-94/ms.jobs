@@ -1,6 +1,7 @@
 package com.myproject.ms.jobs.jobs;
 
 import com.myproject.ms.jobs.config.JobDescription;
+import com.myproject.ms.jobs.config.JobName;
 import com.myproject.ms.jobs.repository.JobLogRepository;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -11,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 
 
 @Component("LogCleanupJob")
+@JobName("Job de nettoyage de logs")
 @JobDescription("Nettoyage automatique des vieux logs") // <-- Ajoute ceci
 public class LogCleanupJob extends QuartzJobBean {
     private final JobLogRepository repository;

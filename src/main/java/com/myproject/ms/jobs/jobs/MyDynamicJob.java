@@ -1,6 +1,7 @@
 package com.myproject.ms.jobs.jobs;
 
 import com.myproject.ms.jobs.config.JobDescription;
+import com.myproject.ms.jobs.config.JobName;
 import com.myproject.ms.jobs.entity.JobLog;
 import com.myproject.ms.jobs.service.JobLogsService;
 import org.quartz.JobExecutionContext;
@@ -11,6 +12,7 @@ import java.time.Instant;
 
 
 @Component("ExampleJob")
+@JobName("Exemple de job")
 @JobDescription("Exemple de job dynamique avec logs") // <-- Ajoute ceci
 public class MyDynamicJob extends QuartzJobBean {
 

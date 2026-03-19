@@ -1,6 +1,7 @@
 package com.myproject.ms.jobs.service;
 
 import com.myproject.ms.jobs.config.JobDescription;
+import com.myproject.ms.jobs.config.JobName;
 import com.myproject.ms.jobs.dto.JobResponse;
 import com.myproject.ms.jobs.dto.JobTypeDto;
 import com.myproject.ms.jobs.exception.ApiException;
@@ -122,10 +123,15 @@ public class JobService {
                     .map(clazz -> clazz.getAnnotation(JobDescription.class).value())
                     .orElse("Aucune description pour ce job (" + beanName + ")");
 
-            return new JobTypeDto(beanName, description);
+            String name = Optional.ofNullable(beanClass)
+                    .filter(clazz -> clazz.isAnnotationPresent(JobName.class))
+                    .map(clazz -> clazz.getAnnotation(JobName.class).value())
+                    .orElse(beanName);
+
+            return new JobTypeDto(beanName, name, description);
         } catch (Exception e) {
             // En cas d'erreur de parsing, on renvoie au moins l'ID
-            return new JobTypeDto(beanName, "Erreur lors de la récupération de la description");
+            return new JobTypeDto(beanName, "Erreur lors de la récupération du nom", "Erreur lors de la récupération de la description");
         }
     }
 }

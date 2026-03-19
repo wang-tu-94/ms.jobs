@@ -104,8 +104,8 @@ class JobControllerTest {
     void getAvailableTypes_ShouldReturnList() throws Exception {
         // Arrange
         List<JobTypeDto> mockTypes = List.of(
-                new JobTypeDto("AlphaJob", "Description Alpha"),
-                new JobTypeDto("CleanupJob", "Description Cleanup")
+                new JobTypeDto("AlphaJob", "name", "Description Alpha"),
+                new JobTypeDto("CleanupJob", "name", "Description Cleanup")
         );
 
         when(jobService.getAvailableJobTypes()).thenReturn(mockTypes);
